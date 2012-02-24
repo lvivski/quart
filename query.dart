@@ -22,70 +22,70 @@ class Query {
     Query(this.dom, this.selector);
 
     Query each(callback) {
-        this.dom.forEach(callback);
+        dom.forEach(callback);
         return this;
     }
 
     List map(callback) {
-        this.dom.map(callback);
+        return dom.map(callback);
     }
 
-    int size() => this.dom.length;
+    int size() => dom.length;
 
-    Element get(idx) => this.dom.getRange(idx, 1);
+    Element get(idx) => dom.getRange(idx, 1);
 
-    Query remove() => this.each((elem){ elem.remove(); });
+    Query remove() => each((elem){ elem.remove(); });
 
-    Query first() => $(this.dom.getRange(0, 1));
+    Query first() => $(dom.getRange(0, 1));
 
-    Query last()  => $(this.dom.last());
+    Query last()  => $(dom.last());
 
-    Query prev()  => $(this.dom[0].previousElementSibling);
+    Query prev()  => $(dom[0].previousElementSibling);
 
-    Query next()  => $(this.dom[0].nextElementSibling);
+    Query next()  => $(dom[0].nextElementSibling);
 
-    bool hasClass(className) => this.dom.first.classes.contains(className);
+    bool hasClass(className) => dom.first.classes.contains(className);
 
-    Query addClass(className) => this.each((elem){ elem.classes.add(className); });
+    Query addClass(className) => each((elem){ elem.classes.add(className); });
 
-    Query removeClass(className) => this.each((elem){ elem.classes.remove(className); });
+    Query removeClass(className) => each((elem){ elem.classes.remove(className); });
 
-    Query toggleClass(className) => this.each((elem){ elem.classes.toggle(className); });
+    Query toggleClass(className) => each((elem){ elem.classes.toggle(className); });
 
-    Query show() => this.each((elem){ elem.hidden = false; });
+    Query show() => each((elem){ elem.hidden = false; });
 
-    Query hide() => this.each((elem){ elem.hidden = true; });
+    Query hide() => each((elem){ elem.hidden = true; });
 
     Dynamic html([html]) {
         if (html !== null) {
-            return this.each((elem){ elem.innerHTML = html; });
+            return each((elem){ elem.innerHTML = html; });
         }
-        return this.dom[0].innerHTML;
+        return dom[0].innerHTML;
     }
 
     Dynamic text([text]) {
         if (text !== null) {
-            return this.each((elem){ elem.innerText = text; });
+            return each((elem){ elem.innerText = text; });
         }
-        return this.dom[0].innerText;
+        return dom[0].innerText;
     }
 
     Dynamic attr(name, [value]) {
         if (value !== null) {
-            return this.each((elem){ elem.attributes[name] = value; });
+            return each((elem){ elem.attributes[name] = value; });
         }
-        return this.dom[0].attributes[name];
+        return dom[0].attributes[name];
     }
 
     Dynamic data(name, [value]) {
         if (value !== null) {
-            return this.each((elem){ elem.dataAttributes[name] = value; });
+            return each((elem){ elem.dataAttributes[name] = value; });
         }
-        return this.dom[0].dataAttributes[name];
+        return dom[0].dataAttributes[name];
     }
 
-    Query insert(where, html) {
-        return this.each((elem){
+    Query _insert(where, html) {
+        return each((elem){
             if (html is Query) {
                 var dom = html;
                     length = dom.length;
@@ -104,11 +104,11 @@ class Query {
         });
     }
 
-    Query append(html)  => insert('beforeEnd', html);
+    Query append(html)  => _insert('beforeEnd', html);
 
-    Query prepend(html) => insert('afterBegin', html);
+    Query prepend(html) => _insert('afterBegin', html);
 
-    Query before(html)  => insert('beforeBegin', html);
+    Query before(html)  => _insert('beforeBegin', html);
 
-    Query after(html)   => insert('afterEnd', html);
+    Query after(html)   => _insert('afterEnd', html);
 }
