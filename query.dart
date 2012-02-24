@@ -75,7 +75,7 @@ class Query {
 
     Dynamic data(name, [value = null]) {
         if (value !== null) {
-            return this.each((elem){ elem.attributes[name] = value; });
+            return this.each((elem){ elem.dataAttributes[name] = value; });
         }
         return this.dom[0].dataAttributes[name];
     }
