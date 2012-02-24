@@ -5,7 +5,6 @@ Query is a minimalist Dart library with a jQuery-compatible API and chaining syn
 # Element functions:
 
 ``` js
-get()               // return array of all elements found
 get(0)              // return first element found
 size()              // the number of elements in collection
 each(callback)      // iterate over collection, calling callback for every element
