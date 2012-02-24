@@ -34,7 +34,7 @@ show()              // forces elements to be displayed
 hide()              // hides elements
 
 bind('event', function)       // add an event listener
-unbind('event' [, function]]) // remove event listeners
+unbind('event' [, function]) // remove event listeners
 ```
 
 ## License
