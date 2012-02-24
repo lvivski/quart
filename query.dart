@@ -17,13 +17,17 @@ $(selector, [context]){
 
 class Query {
     final String selector;
-    final ElementList dom;
+    final List   dom;
 
     Query(this.dom, this.selector);
 
     Query each(callback) {
         this.dom.forEach(callback);
         return this;
+    }
+
+    List map(callback) {
+        this.dom.map(callback);
     }
 
     int size() => this.dom.length;
