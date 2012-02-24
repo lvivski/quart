@@ -14,6 +14,13 @@
             $('div').addClass('test');
             $('.test').removeClass('newClass').before(button()).prepend(input()).show();
             $('.test').html();
+
+            $('button').bind('click', (e){
+                print(e);
+            });
+
+            $('button').last().unbind('click');
+
         }
     </script>
 </head>
