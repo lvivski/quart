@@ -1,4 +1,4 @@
-$(selector, [context = null]){
+$(selector, [context]){
     if (context !== null) {
         return $(context).find(selector);
     } else if (selector is Query) {
@@ -52,28 +52,28 @@ class Query {
 
     Query hide() => this.each((elem){ elem.hidden = true; });
 
-    Dynamic html([html = null]) {
+    Dynamic html([html]) {
         if (html !== null) {
             return this.each((elem){ elem.innerHTML = html; });
         }
         return this.dom[0].innerHTML;
     }
 
-    Dynamic text([text = null]) {
+    Dynamic text([text]) {
         if (text !== null) {
             return this.each((elem){ elem.innerText = text; });
         }
         return this.dom[0].innerText;
     }
 
-    Dynamic attr(name, [value = null]) {
+    Dynamic attr(name, [value]) {
         if (value !== null) {
             return this.each((elem){ elem.attributes[name] = value; });
         }
         return this.dom[0].attributes[name];
     }
 
-    Dynamic data(name, [value = null]) {
+    Dynamic data(name, [value]) {
         if (value !== null) {
             return this.each((elem){ elem.dataAttributes[name] = value; });
         }
