@@ -17,7 +17,7 @@ remove()            // remove element
 
 html()              // get first element's .innerHTML
 html('<br />')      // set the contents to the element(s)
-text()              // get first element's .textContent
+text()              // get first element's .innerText
 text('text')        // set the text contents to the element(s)
 attr('name')        // get element attribute
 attr('name', 'val') // set element attribute
@@ -33,8 +33,8 @@ before(), after()   // add html (or a DOM Element or a Query object) before/afte
 show()              // forces elements to be displayed
 hide()              // hides elements
 
-bind(type, function)       // add an event listener
-unbind(type [, function]]) // remove event listeners
+bind('event', function)       // add an event listener
+unbind('event' [, function]]) // remove event listeners
 ```
 
 ## License
