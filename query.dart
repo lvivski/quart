@@ -32,11 +32,11 @@ class Query {
 
     int size() => dom.length;
 
-    Element get(idx) => dom.getRange(idx, 1);
+    Element get(idx) => dom[idx];
 
     Query remove() => each((elem){ elem.remove(); });
 
-    Query first() => $(dom.getRange(0, 1));
+    Query first() => $(dom[0]);
 
     Query last()  => $(dom.last());
 

@@ -2,6 +2,41 @@
 
 Query is a minimalist Dart library with a jQuery-compatible API and chaining syntax.
 
+# Element functions:
+
+``` js
+get()               // return array of all elements found
+get(0)              // return first element found
+size()              // the number of elements in collection
+each(callback)      // iterate over collection, calling callback for every element
+first()             // new collection containing only the first matched element
+last()              // new collection containing only the last matched element
+next()              // next siblings
+prev()              // previous siblings
+remove()            // remove element
+
+html()              // get first element's .innerHTML
+html('<br />')      // set the contents to the element(s)
+text()              // get first element's .textContent
+text('text')        // set the text contents to the element(s)
+attr('name')        // get element attribute
+attr('name', 'val') // set element attribute
+data('name')        // gets the value of the "data-name" attribute
+data('name', 'val') // sets the value of the "data-name" attribute
+addClass('name')    // adds a CSS class name
+removeClass('name') // removes a CSS class name
+hasClass('name')    // returns true of first element has a classname set
+toggleClass('name') // adds/removes class
+append(), prepend() // like html(), but add html (or a DOM Element or a Query object) to element contents
+before(), after()   // add html (or a DOM Element or a Query object) before/after the element
+
+show()              // forces elements to be displayed
+hide()              // hides elements
+
+bind(type, function)       // add an event listener
+unbind(type [, function]]) // remove event listeners
+```
+
 ## License
 
 Copyright (c) 2012 Yehor Lvivski
