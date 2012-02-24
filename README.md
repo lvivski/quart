@@ -1,6 +1,6 @@
-# Query
+# Quart
 
-Query is a minimalist Dart library with a jQuery-compatible API and chaining syntax.
+Quart is a minimalist Dart library with a jQuart-compatible API and chaining syntax.
 
 # Element functions:
 
@@ -26,8 +26,8 @@ addClass('name')    // adds a CSS class name
 removeClass('name') // removes a CSS class name
 hasClass('name')    // returns true of first element has a classname set
 toggleClass('name') // adds/removes class
-append(), prepend() // like html(), but add html (or a DOM Element or a Query object) to element contents
-before(), after()   // add html (or a DOM Element or a Query object) before/after the element
+append(), prepend() // like html(), but add html (or a DOM Element or a Quart object) to element contents
+before(), after()   // add html (or a DOM Element or a Quart object) before/after the element
 
 show()              // forces elements to be displayed
 hide()              // hides elements

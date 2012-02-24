@@ -1,27 +1,27 @@
 $(selector, [context]){
     if (context !== null) {
         return $(context).find(selector);
-    } else if (selector is Query) {
+    } else if (selector is Quart) {
         return selector;
     } else {
-        var dom;
+        List dom;
         if (selector is Element) {
             dom = [selector];
             selector = null;
         } else {
             dom =  new List.from(document.queryAll(selector));
         }
-        return new Query(dom, selector);
+        return new Quart(dom, selector);
     }
 }
 
-class Query {
+class Quart {
     final String selector;
     final List   dom;
 
-    Query(this.dom, this.selector);
+    Quart(this.dom, this.selector);
 
-    Query each(callback) {
+    Quart each(callback) {
         dom.forEach(callback);
         return this;
     }
@@ -34,27 +34,27 @@ class Query {
 
     Element get(idx) => dom[idx];
 
-    Query remove() => each((elem){ elem.remove(); });
+    Quart remove() => each((elem){ elem.remove(); });
 
-    Query first() => $(dom[0]);
+    Quart first() => $(dom[0]);
 
-    Query last()  => $(dom.last());
+    Quart last()  => $(dom.last());
 
-    Query prev()  => $(dom[0].previousElementSibling);
+    Quart prev()  => $(dom[0].previousElementSibling);
 
-    Query next()  => $(dom[0].nextElementSibling);
+    Quart next()  => $(dom[0].nextElementSibling);
 
     bool hasClass(className) => dom.first.classes.contains(className);
 
-    Query addClass(className) => each((elem){ elem.classes.add(className); });
+    Quart addClass(className) => each((elem){ elem.classes.add(className); });
 
-    Query removeClass(className) => each((elem){ elem.classes.remove(className); });
+    Quart removeClass(className) => each((elem){ elem.classes.remove(className); });
 
-    Query toggleClass(className) => each((elem){ elem.classes.toggle(className); });
+    Quart toggleClass(className) => each((elem){ elem.classes.toggle(className); });
 
-    Query show() => each((elem){ elem.hidden = false; });
+    Quart show() => each((elem){ elem.hidden = false; });
 
-    Query hide() => each((elem){ elem.hidden = true; });
+    Quart hide() => each((elem){ elem.hidden = true; });
 
     Dynamic html([html]) {
         if (html !== null) {
@@ -84,9 +84,9 @@ class Query {
         return dom[0].dataAttributes[name];
     }
 
-    Query _insert(where, html) {
+    Quart _insert(where, html) {
         return each((elem){
-            if (html is Query) {
+            if (html is Quart) {
                 var dom = html;
                     length = dom.length;
                 if (where == 'afterBegin' || where == 'afterEnd') {
@@ -104,20 +104,20 @@ class Query {
         });
     }
 
-    Query append(html)  => _insert('beforeEnd', html);
+    Quart append(html)  => _insert('beforeEnd', html);
 
-    Query prepend(html) => _insert('afterBegin', html);
+    Quart prepend(html) => _insert('afterBegin', html);
 
-    Query before(html)  => _insert('beforeBegin', html);
+    Quart before(html)  => _insert('beforeBegin', html);
 
-    Query after(html)   => _insert('afterEnd', html);
+    Quart after(html)   => _insert('afterEnd', html);
 
-    Query bind(evt, callback) => each((elem){ QueryEvent.add(elem, evt, callback); });
+    Quart bind(evt, callback) => each((elem){ QuartEvent.add(elem, evt, callback); });
 
-    Query unbind(evt, [callback]) => each((elem){ QueryEvent.remove(elem, evt, callback); });
+    Quart unbind(evt, [callback]) => each((elem){ QuartEvent.remove(elem, evt, callback); });
 }
 
-class QueryEvent {
+class QuartEvent {
     static List handlers;
 
     static Dynamic _find(Element elem, String evt, fn) {
