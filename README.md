@@ -33,7 +33,7 @@ before(), after()   // add html (or a DOM Element or a Query object) before/afte
 show()              // forces elements to be displayed
 hide()              // hides elements
 
-bind('event', function)       // add an event listener
+bind('event', function)      // add an event listener
 unbind('event' [, function]) // remove event listeners
 ```
 
