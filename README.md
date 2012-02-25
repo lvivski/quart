@@ -7,7 +7,7 @@ Quart is a minimalist Dart library with a jQuery-compatible API and chaining syn
 ``` js
 get(0)              // return first element found
 size()              // the number of elements in collection
-each(callback)      // iterate over collection, calling callback for every element
+each(function)      // iterate over collection, calling callback for every element
 first()             // new collection containing only the first matched element
 last()              // new collection containing only the last matched element
 next()              // next siblings
@@ -41,8 +41,8 @@ unbind(['event', function]) // remove event listeners
 Simple GET and POST:
 
 ``` js
-$_.get(url, [callback])
-$_.post(url, data, [callback])
+$_.get(url, [function])
+$_.post(url, data, [function])
 ```
 
 If you need more control (all keys are optional):
