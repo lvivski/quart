@@ -1,6 +1,6 @@
 # Quart
 
-Quart is a minimalist Dart library with a jQuart-compatible API and chaining syntax.
+Quart is a minimalist Dart library with a jQuery-compatible API and chaining syntax.
 
 # Element functions:
 
