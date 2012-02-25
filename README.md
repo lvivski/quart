@@ -33,7 +33,7 @@ show()              // forces elements to be displayed
 hide()              // hides elements
 
 bind('event', function)      // add an event listener
-unbind(['event' [, function]]) // remove event listeners
+unbind(['event', function]) // remove event listeners
 ```
 
 # Ajax
@@ -42,7 +42,7 @@ Simple GET and POST:
 
 ``` js
 $_.get(url, [callback])
-$_.post(url, [data], [callback])
+$_.post(url, data, [callback])
 ```
 
 If you need more control (all keys are optional):
@@ -52,8 +52,8 @@ $_.ajax({
   'type': 'POST',                      // defaults to 'GET'
   'url': '/foo',                       // defaults to window.location
   'data': {'hello': 'Hello World!'},   // can be a String or Map
-  'success': (body[, type[, xhr]]) {}, // body is a string or JSON
-  'error': (xhr[, type]) {}            // type is a string ('error')
+  'success': (body, [type, xhr]]) {}, // body is a string or JSON
+  'error': (xhr, [type]) {}            // type is a string ('error')
 })
 ```
 
