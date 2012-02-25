@@ -5,6 +5,7 @@
     <title>Quart Testyard</title>
     <script type="application/dart">
         #import('dart:html');
+        #import('dart:json');
         #source('quart.dart');
         void main() {
             $('.test').hide().data('path', 'asda').html('<i></i>').addClass('newClass').removeClass('test').prev().addClass('test').show();
@@ -20,6 +21,13 @@
             });
 
             $('button').first().unbind('click');
+            $_.ajax({
+                'url': 'ajax.json',
+                'success': (data, [type, xhr]){
+                    print(data);
+                }
+            });
+            $_.post('ajax.json', {'string': 'string'}, (data, [type, xhr]){ print(data); });
 
         }
     </script>
