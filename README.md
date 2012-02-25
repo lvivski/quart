@@ -32,7 +32,7 @@ before(), after()   // add html (or a DOM Element or a Quart object) before/afte
 show()              // forces elements to be displayed
 hide()              // hides elements
 
-bind('event', function)      // add an event listener
+bind('event', function)     // add an event listener
 unbind(['event', function]) // remove event listeners
 ```
 
@@ -49,11 +49,11 @@ If you need more control (all keys are optional):
 
 ``` js
 $_.ajax({
-  'type': 'POST',                      // defaults to 'GET'
-  'url': '/foo',                       // defaults to window.location
-  'data': {'hello': 'Hello World!'},   // can be a String or Map
-  'success': (body, [type, xhr]]) {}, // body is a string or JSON
-  'error': (xhr, [type]) {}            // type is a string ('error')
+  'type': 'POST',                    // defaults to 'GET'
+  'url': '/foo',                     // defaults to window.location
+  'data': {'hello': 'Hello World!'}, // can be a String or Map
+  'success': (body, [type, xhr]) {}, // body is a string or JSON
+  'error': (xhr, [type]) {}          // type is a string ('error')
 })
 ```
 
