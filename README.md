@@ -8,11 +8,18 @@ Quart is a minimalist Dart library with a jQuery-compatible API and chaining syn
 get(0)              // return first element found
 size()              // the number of elements in collection
 each(function)      // iterate over collection, calling callback for every element
+filter(function)    // reduce the current set of elements to match predicate
 first()             // new collection containing only the first matched element
 last()              // new collection containing only the last matched element
+
 next()              // next siblings
 prev()              // previous siblings
 remove()            // remove element
+parent()            // immediate parent node of each element in collection
+children()          // immediate children of each element in collection
+match('selector')   // returns true/false if any element matches the selector
+not('selector')     // remove elements matching 'selector' from the current collection
+find('selector')    // find all children/grandchildren that match the given selector
 
 html()              // get first element's .innerHTML
 html('<br />')      // set the contents to the element(s)

@@ -8,6 +8,9 @@ $(selector, [context]){
         if (selector is Element) {
             dom = [selector];
             selector = null;
+        } else if(selector is List) {
+            dom = selector;
+            selector = null;
         } else {
             dom =  new List.from(document.queryAll(selector));
         }
@@ -26,9 +29,9 @@ class Quart {
         return this;
     }
 
-    List map(callback) {
-        return dom.map(callback);
-    }
+    List map(callback) => dom.map(callback);
+
+    Quart filter(callback) => $(dom.filter(callback));
 
     int size() => dom.length;
 
@@ -43,6 +46,24 @@ class Quart {
     Quart prev()  => $(dom[0].previousElementSibling);
 
     Quart next()  => $(dom[0].nextElementSibling);
+
+    Quart parent()  => $(map((elem) => elem.parent));
+
+    Quart children() {
+        List children = [];
+        each((elem){ children.addAll(elem.elements); });
+        return $(children);
+    }
+
+    Quart find(selector) {
+        List children = [];
+        each((elem){ children.addAll(elem.queryAll(selector)); });
+        return $(children);
+    }
+
+    bool match(selector) => filter((elem) => elem.matchesSelector(selector)).size() > 0;
+
+    Quart not(selector) => filter((elem) => elem.matchesSelector(selector) === false);
 
     bool hasClass(className) => dom.first.classes.contains(className);
 
@@ -63,6 +84,7 @@ class Quart {
         return dom[0].innerHTML;
     }
 
+    /* Not yet implemented in VM */
     Dynamic text([text]) {
         if (text !== null) {
             return each((elem){ elem.innerText = text; });
