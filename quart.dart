@@ -15,75 +15,6 @@ $(selector, [context]){
     }
 }
 
-class $_ {
-    /*static List extensions;
-
-    static noSuchMethod(String name, List args) {
-        if (extensions === null) {
-            extensions = [];
-        }
-        if (name.length > 4) {
-            String prefix  = name.substring(0, 4);
-            String key     = name.substring(4);
-
-            if (prefix == "get:") {
-                return extensions[key];
-            } else if (prefix == "set:") {
-                extensions[key] = args[0];
-            }
-        }
-    }*/
-
-    static void ajax([Map options]) {
-        if(options === null) {
-            return;
-        }
-        var empty    = ([data, state, xhr]){};
-        var callback = options.containsKey('success') ? options['success'] : empty;
-        var errback  = options.containsKey('error') ? options['error'] : empty;
-        String type  = options.containsKey('type') ? options['type'] : 'GET';
-        String url   = options.containsKey('url') ? options['url'] : window.location;
-        String data;
-        if (options.containsKey('data') && options['data'] is Map) {
-            data = JSON.stringify(data);
-        }
-
-        XMLHttpRequest xhr = new XMLHttpRequest();
-
-        xhr.on.readyStateChange.add((evt){
-            if (xhr.readyState == 4) {
-                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 0) {
-                    if (! (new RegExp(@"/^\s*$/")).hasMatch(xhr.responseText)) {
-                        callback(JSON.parse(xhr.responseText), 'success', xhr);
-                    } else {
-                        callback(xhr.responseText, 'success', xhr);
-                    }
-                } else {
-                    errback(xhr, 'error');
-                }
-            }
-        });
-
-        xhr.open(type, url, true);
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        xhr.send(data);
-    }
-
-    static void get(String url, [success]) {
-        ajax({
-            'url': url,
-            'success': success });
-    }
-
-    static void post(String url, data, [success]) {
-        ajax({
-            'type': 'POST',
-            'url' : url,
-            'data': data,
-            'success': success });
-    }
-}
-
 class Quart {
     final String selector;
     final List   dom;
@@ -224,3 +155,73 @@ class QuartEvent {
         });
     }
 }
+
+class $_ {
+    /*static List extensions;
+
+    static noSuchMethod(String name, List args) {
+        if (extensions === null) {
+            extensions = [];
+        }
+        if (name.length > 4) {
+            String prefix  = name.substring(0, 4);
+            String key     = name.substring(4);
+
+            if (prefix == "get:") {
+                return extensions[key];
+            } else if (prefix == "set:") {
+                extensions[key] = args[0];
+            }
+        }
+    }*/
+
+    static void ajax([Map options]) {
+        if(options === null) {
+            return;
+        }
+        var empty    = ([data, state, xhr]){};
+        var callback = options.containsKey('success') ? options['success'] : empty;
+        var errback  = options.containsKey('error') ? options['error'] : empty;
+        String type  = options.containsKey('type') ? options['type'] : 'GET';
+        String url   = options.containsKey('url') ? options['url'] : window.location;
+        String data;
+        if (options.containsKey('data') && options['data'] is Map) {
+            data = JSON.stringify(data);
+        }
+
+        XMLHttpRequest xhr = new XMLHttpRequest();
+
+        xhr.on.readyStateChange.add((evt){
+            if (xhr.readyState == 4) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 0) {
+                    if (! (new RegExp(@"/^\s*$/")).hasMatch(xhr.responseText)) {
+                        callback(JSON.parse(xhr.responseText), 'success', xhr);
+                    } else {
+                        callback(xhr.responseText, 'success', xhr);
+                    }
+                } else {
+                    errback(xhr, 'error');
+                }
+            }
+        });
+
+        xhr.open(type, url, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.send(data);
+    }
+
+    static void get(String url, [success]) {
+        ajax({
+            'url': url,
+            'success': success });
+    }
+
+    static void post(String url, data, [success]) {
+        ajax({
+            'type': 'POST',
+            'url' : url,
+            'data': data,
+            'success': success });
+    }
+}
+
