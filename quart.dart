@@ -65,7 +65,7 @@ class Quart {
 
     Quart not(selector) => filter((elem) => elem.matchesSelector(selector) === false);
 
-    bool hasClass(className) => dom.first.classes.contains(className);
+    bool hasClass(className) => dom[0].classes.contains(className);
 
     Quart addClass(className) => each((elem){ elem.classes.add(className); });
 
@@ -109,7 +109,7 @@ class Quart {
     Quart _insert(where, html) {
         return each((elem){
             if (html is Quart) {
-                var dom = html;
+                var dom = html,
                     length = dom.length;
                 if (where == 'afterBegin' || where == 'afterEnd') {
                     dom.each((elem, idx){ elem.insertAdjacentElement(where, dom[length-idx-1]); });
