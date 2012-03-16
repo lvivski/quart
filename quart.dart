@@ -1,3 +1,8 @@
+#library('quart');
+
+#import('dart:html');
+#import('dart:json');
+
 $(selector, [context]){
     if (context !== null) {
         return $(context).find(selector);
