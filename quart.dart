@@ -24,8 +24,8 @@ $(selector, [context]){
 }
 
 class Quart {
-    final String selector;
-    final List   dom;
+    String selector;
+    List   dom;
 
     Quart(this.dom, this.selector);
 
@@ -55,20 +55,20 @@ class Quart {
     Quart parent()  => $(map((elem) => elem.parent));
 
     Quart children() {
-        List children = [];
-        each((elem){ children.addAll(elem.elements); });
-        return $(children);
+        List childList = [];
+        each((elem){ childList.addAll(elem.elements); });
+        return $(childList);
     }
 
-    Quart find(selector) {
-        List children = [];
-        each((elem){ children.addAll(elem.queryAll(selector)); });
-        return $(children);
+    Quart find(sel) {
+        List childList = [];
+        each((elem){ childList.addAll(elem.queryAll(sel)); });
+        return $(childList);
     }
 
-    bool match(selector) => filter((elem) => elem.matchesSelector(selector)).size() > 0;
+    bool match(sel) => filter((elem) => elem.matchesSelector(sel)).size() > 0;
 
-    Quart not(selector) => filter((elem) => elem.matchesSelector(selector) === false);
+    Quart not(sel) => filter((elem) => elem.matchesSelector(sel) === false);
 
     bool hasClass(className) => dom[0].classes.contains(className);
 
@@ -82,17 +82,17 @@ class Quart {
 
     Quart hide() => each((elem){ elem.hidden = true; });
 
-    Dynamic html([html]) {
+    Dynamic html([htmlData]) {
         if (html !== null) {
-            return each((elem){ elem.innerHTML = html; });
+            return each((elem){ elem.innerHTML = htmlData; });
         }
         return dom[0].innerHTML;
     }
 
     /* Not yet implemented in VM */
-    Dynamic text([text]) {
+    Dynamic text([textData]) {
         if (text !== null) {
-            return each((elem){ elem.innerText = text; });
+            return each((elem){ elem.innerText = textData; });
         }
         return dom[0].innerText;
     }
@@ -111,33 +111,36 @@ class Quart {
         return dom[0].dataAttributes[name];
     }
 
-    Quart _insert(where, html) {
+    Quart _insert(where, htmlData) {
         return each((elem){
-            if (html is Quart) {
-                var dom = html,
-                    length = dom.length;
+            if (htmlData is Quart) {
+                dom = htmlData.dom;
                 if (where == 'afterBegin' || where == 'afterEnd') {
-                    dom.each((elem, idx){ elem.insertAdjacentElement(where, dom[length-idx-1]); });
+                  for (var i=0; i < dom.length; i++) {
+                    elem.insertAdjacentElement(where, dom[dom.length-i-1]);
+                  }
                 } else {
-                    dom.each((elem, idx){ elem.insertAdjacentElement(where, dom[idx]); });
+                  for (var i=0; i < dom.length; i++) {
+                    elem.insertAdjacentElement(where, dom[i]);
+                  }
                 }
             } else {
                 if(html is Element) {
-                    elem.insertAdjacentElement(where, html);
+                    elem.insertAdjacentElement(where, htmlData);
                 } else {
-                    elem.insertAdjacentHTML(where, html);
+                    elem.insertAdjacentHTML(where, htmlData);
                 }
             }
         });
     }
 
-    Quart append(html)  => _insert('beforeEnd', html);
+    Quart append(htmlData)  => _insert('beforeEnd', htmlData);
 
-    Quart prepend(html) => _insert('afterBegin', html);
+    Quart prepend(htmlData) => _insert('afterBegin', htmlData);
 
-    Quart before(html)  => _insert('beforeBegin', html);
+    Quart before(htmlData)  => _insert('beforeBegin', htmlData);
 
-    Quart after(html)   => _insert('afterEnd', html);
+    Quart after(htmlData)   => _insert('afterEnd', htmlData);
 
     Quart bind(evt, callback) => each((elem){ QuartEvent.add(elem, evt, callback); });
 
@@ -210,7 +213,7 @@ class $_ {
         var callback = options.containsKey('success') ? options['success'] : empty;
         var errback  = options.containsKey('error') ? options['error'] : empty;
         String type  = options.containsKey('type') ? options['type'] : 'GET';
-        String url   = options.containsKey('url') ? options['url'] : window.location;
+        String url   = options.containsKey('url') ? options['url'] : window.location.toString();
         String data;
         if (options.containsKey('data') && options['data'] is Map) {
             data = JSON.stringify(data);
