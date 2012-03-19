@@ -83,7 +83,7 @@ class Quart {
   Quart hide() => each((elem){ elem.hidden = true; });
 
   Dynamic html([htmlData]) {
-    if (html !== null) {
+    if (htmlData !== null) {
       return each((elem){ elem.innerHTML = htmlData; });
     }
     return dom[0].innerHTML;
@@ -125,7 +125,7 @@ class Quart {
          }
         }
       } else {
-        if(html is Element) {
+        if(htmlData is Element) {
           elem.insertAdjacentElement(where, htmlData);
         } else {
           elem.insertAdjacentHTML(where, htmlData);
