@@ -1,88 +1,160 @@
-#library('quart');
+library quart;
 
-#import('dart:html');
-#import('dart:json');
+import 'dart:html';
+import 'dart:json';
 
-$(selector, [context]){
-  if (context !== null) {
-    return $(context).find(selector);
-  } else if (selector is Quart) {
-    return selector;
-  } else {
-    List dom;
-    if (selector is Element) {
-      dom = [selector];
-      selector = null;
-    } else if(selector is List) {
-      dom = selector;
-      selector = null;
-    } else {
-      dom = new List.from(document.queryAll(selector));
+class Quart {
+  Map extensions;
+
+  noSuchMethod(mirror) {
+    if (extensions === null) {
+      extensions = {};
     }
-    return new Quart(dom, selector);
+    if (mirror.memberName.length > 4) {
+      String name = mirror.memberName;
+      List args = mirror.positionalArguments;
+      String prefix = name.substring(0, 4);
+      String key = name.substring(4);
+      if (prefix == "get:") {
+        return extensions[key];
+      } else if (prefix == "set:") {
+        extensions[key] = args[0];
+      }
+    }
+  }
+  
+  call(selector, [context]) {
+    if (context !== null) {
+      return call(context).find(selector);
+    } else if (selector is QuartDom) {
+      return selector;
+    } else {
+      List dom;
+      if (selector is Element) {
+        dom = [selector];
+        selector = null;
+      } else if(selector is List) {
+        dom = selector;
+        selector = null;
+      } else {
+        dom = new List.from(document.queryAll(selector));
+      }
+      return new QuartDom(dom, selector);
+    }
+  }
+
+  HttpRequest ajax([Map options]) {
+    if(options === null) {
+      throw new Exception();
+    }
+    var empty  = ([data, state, xhr]){};
+    var callback = options.containsKey('success') ? options['success'] : empty;
+    var errback = options.containsKey('error') ? options['error'] : empty;
+    String type = options.containsKey('type') ? options['type'] : 'GET';
+    String url  = options.containsKey('url') ? options['url'] : window.location.toString();
+    String data;
+    if (options.containsKey('data') && options['data'] is Map) {
+      data = JSON.stringify(data);
+    }
+
+    HttpRequest xhr = new HttpRequest();
+
+    xhr.on.readyStateChange.add((evt){
+      if (xhr.readyState == 4) {
+        if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 0) {
+          if (! (new RegExp(r"/^\s*$/")).hasMatch(xhr.responseText)) {
+            callback(JSON.parse(xhr.responseText), 'success', xhr);
+          } else {
+            callback(xhr.responseText, 'success', xhr);
+          }
+        } else {
+          errback(xhr, 'error');
+        }
+      }
+    });
+
+    xhr.open(type, url, true);
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    xhr.send(data);
+    return xhr;
+  }
+
+  HttpRequest get(String url, [success]) {
+    return ajax({
+      'url': url,
+      'success': success });
+  }
+
+  HttpRequest post(String url, data, [success]) {
+    return ajax({
+      'type': 'POST',
+      'url' : url,
+      'data': data,
+      'success': success });
   }
 }
 
-class Quart {
+class QuartDom {
   String selector;
   List  dom;
+  Quart Q;
 
-  Quart(this.dom, this.selector);
+  QuartDom(this.dom, this.selector): Q = new Quart();
 
-  Quart each(callback) {
+  QuartDom each(callback) {
     dom.forEach(callback);
     return this;
   }
 
   List map(callback) => dom.map(callback);
 
-  Quart filter(callback) => $(dom.filter(callback));
+  QuartDom filter(callback) => Q(dom.filter(callback));
 
   int size() => dom.length;
 
   Element get(idx) => dom[idx];
 
-  Quart remove() => each((elem){ elem.remove(); });
+  QuartDom remove() => each((elem){ elem.remove(); });
 
-  Quart first() => $(dom[0]);
+  QuartDom first() => Q(dom[0]);
 
-  Quart last() => $(dom.last());
+  QuartDom last() => Q(dom.last);
 
-  Quart prev() => $(dom[0].previousElementSibling);
+  QuartDom prev() => Q(dom[0].previousElementSibling);
 
-  Quart next() => $(dom[0].nextElementSibling);
+  QuartDom next() => Q(dom[0].nextElementSibling);
 
-  Quart parent() => $(map((elem) => elem.parent));
+  QuartDom parent() => Q(map((elem) => elem.parent));
 
-  Quart children() {
+  QuartDom children() {
     List childList = [];
     each((elem){ childList.addAll(elem.elements); });
-    return $(childList);
+    return Q(childList);
   }
 
-  Quart find(sel) {
+  QuartDom find(sel) {
     List childList = [];
     each((elem){ childList.addAll(elem.queryAll(sel)); });
-    return $(childList);
+    return Q(childList);
   }
 
   bool match(sel) => filter((elem) => elem.matchesSelector(sel)).size() > 0;
 
-  Quart not(sel) => filter((elem) => elem.matchesSelector(sel) === false);
+  QuartDom not(sel) => filter((elem) => elem.matchesSelector(sel) === false);
 
   bool hasClass(className) => dom[0].classes.contains(className);
 
-  Quart addClass(className) => each((elem){ elem.classes.add(className); });
+  QuartDom addClass(className) => each((elem){ elem.classes.add(className); });
 
-  Quart removeClass(className) => each((elem){ elem.classes.remove(className); });
+  QuartDom removeClass(className) => each((elem){ elem.classes.remove(className); });
 
-  Quart toggleClass(className) => each((elem){ elem.classes.toggle(className); });
+  QuartDom toggleClass(className) => each((elem){ elem.classes.toggle(className); });
 
-  Quart show() => each((elem){ elem.hidden = false; });
+  QuartDom show() => each((elem){ elem.hidden = false; });
 
-  Quart hide() => each((elem){ elem.hidden = true; });
+  QuartDom hide() => each((elem){ elem.hidden = true; });
 
-  Dynamic html([htmlData]) {
+  html([htmlData]) {
     if (htmlData !== null) {
       return each((elem){ elem.innerHTML = htmlData; });
     }
@@ -90,30 +162,30 @@ class Quart {
   }
 
   /* Not yet implemented in VM */
-  Dynamic text([textData]) {
+  text([textData]) {
     if (text !== null) {
       return each((elem){ elem.innerText = textData; });
     }
     return dom[0].innerText;
   }
 
-  Dynamic attr(name, [value]) {
+  attr(name, [value]) {
     if (value !== null) {
       return each((elem){ elem.attributes[name] = value; });
     }
     return dom[0].attributes[name];
   }
 
-  Dynamic data(name, [value]) {
+  data(name, [value]) {
     if (value !== null) {
       return each((elem){ elem.dataAttributes[name] = value; });
     }
     return dom[0].dataAttributes[name];
   }
 
-  Quart _insert(where, htmlData) {
+  QuartDom _insert(where, htmlData) {
     return each((elem){
-      if (htmlData is Quart) {
+      if (htmlData is QuartDom) {
         dom = htmlData.dom;
         if (where == 'afterBegin' || where == 'afterEnd') {
          for (var i=0; i < dom.length; i++) {
@@ -134,23 +206,23 @@ class Quart {
     });
   }
 
-  Quart append(htmlData) => _insert('beforeEnd', htmlData);
+  QuartDom append(htmlData) => _insert('beforeEnd', htmlData);
 
-  Quart prepend(htmlData) => _insert('afterBegin', htmlData);
+  QuartDom prepend(htmlData) => _insert('afterBegin', htmlData);
 
-  Quart before(htmlData) => _insert('beforeBegin', htmlData);
+  QuartDom before(htmlData) => _insert('beforeBegin', htmlData);
 
-  Quart after(htmlData)  => _insert('afterEnd', htmlData);
+  QuartDom after(htmlData)  => _insert('afterEnd', htmlData);
 
-  Quart bind(evt, callback) => each((elem){ QuartEvent.add(elem, evt, callback); });
+  QuartDom bind(evt, callback) => each((elem){ QuartEvent.add(elem, evt, callback); });
 
-  Quart unbind([evt, callback]) => each((elem){ QuartEvent.remove(elem, evt, callback); });
+  QuartDom unbind([evt, callback]) => each((elem){ QuartEvent.remove(elem, evt, callback); });
 }
 
 class QuartEvent {
   static List handlers;
 
-  static Dynamic _find(Element elem, String evt, fn) {
+  static _find(Element elem, String evt, fn) {
     return handlers.filter((handler){
       return handler !== null
         && handler['elem'] === elem
@@ -183,75 +255,6 @@ class QuartEvent {
         elem.on[evt].remove(handler['fn']);
       });
     });
-  }
-}
-
-class $_ {
-  /*static List extensions;
-
-  static noSuchMethod(String name, List args) {
-    if (extensions === null) {
-      extensions = [];
-    }
-    if (name.length > 4) {
-      String prefix = name.substring(0, 4);
-      String key   = name.substring(4);
-
-      if (prefix == "get:") {
-        return extensions[key];
-      } else if (prefix == "set:") {
-        extensions[key] = args[0];
-      }
-    }
-  }*/
-
-  static void ajax([Map options]) {
-    if(options === null) {
-      return;
-    }
-    var empty  = ([data, state, xhr]){};
-    var callback = options.containsKey('success') ? options['success'] : empty;
-    var errback = options.containsKey('error') ? options['error'] : empty;
-    String type = options.containsKey('type') ? options['type'] : 'GET';
-    String url  = options.containsKey('url') ? options['url'] : window.location.toString();
-    String data;
-    if (options.containsKey('data') && options['data'] is Map) {
-      data = JSON.stringify(data);
-    }
-
-    XMLHttpRequest xhr = new XMLHttpRequest();
-
-    xhr.on.readyStateChange.add((evt){
-      if (xhr.readyState == 4) {
-        if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 0) {
-          if (! (new RegExp(@"/^\s*$/")).hasMatch(xhr.responseText)) {
-            callback(JSON.parse(xhr.responseText), 'success', xhr);
-          } else {
-            callback(xhr.responseText, 'success', xhr);
-          }
-        } else {
-          errback(xhr, 'error');
-        }
-      }
-    });
-
-    xhr.open(type, url, true);
-    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    xhr.send(data);
-  }
-
-  static void get(String url, [success]) {
-    ajax({
-      'url': url,
-      'success': success });
-  }
-
-  static void post(String url, data, [success]) {
-    ajax({
-      'type': 'POST',
-      'url' : url,
-      'data': data,
-      'success': success });
   }
 }
 
