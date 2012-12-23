@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
     <title>Quart Testyard</title>
     <script type="application/dart">
-        #import('dart:html');
-        #import('package:quart/quart.dart');
+        import 'dart:html';
+        import 'package:quart/quart.dart';
         void main() {
             $('.test').hide().data('path', 'asda').html('<i></i>').addClass('newClass').removeClass('test').prev().addClass('test').show();
             var button = () => new Element.html('<button>Button</button>');
