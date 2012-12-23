@@ -48,14 +48,14 @@ unbind(['event', function]) // remove event listeners
 Simple GET and POST:
 
 ``` js
-$_.get(url, [function])
-$_.post(url, data, [function])
+$.get(url, [function])
+$.post(url, data, [function])
 ```
 
 If you need more control (all keys are optional):
 
 ``` js
-$_.ajax({
+$.ajax({
   'type': 'POST',                    // defaults to 'GET'
   'url': '/foo',                     // defaults to window.location
   'data': {'hello': 'Hello World!'}, // can be a String or Map

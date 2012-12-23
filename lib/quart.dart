@@ -6,8 +6,8 @@ import 'dart:json';
 class Quart {
   Map extensions;
 
-  noSuchMethod(mirror) {
-    if (extensions === null) {
+  noSuchMethod(InvocationMirror mirror) {
+    if (extensions == null) {
       extensions = {};
     }
     if (mirror.memberName.length > 4) {
@@ -22,9 +22,9 @@ class Quart {
       }
     }
   }
-  
-  call(selector, [context]) {
-    if (context !== null) {
+
+  call(Object selector, [Object context]) {
+    if (context != null) {
       return call(context).find(selector);
     } else if (selector is QuartDom) {
       return selector;
@@ -44,7 +44,7 @@ class Quart {
   }
 
   HttpRequest ajax([Map options]) {
-    if(options === null) {
+    if(options == null) {
       throw new Exception();
     }
     var empty  = ([data, state, xhr]){};
@@ -79,13 +79,13 @@ class Quart {
     return xhr;
   }
 
-  HttpRequest get(String url, [success]) {
+  HttpRequest get(String url, [Function success]) {
     return ajax({
       'url': url,
       'success': success });
   }
 
-  HttpRequest post(String url, data, [success]) {
+  HttpRequest post(String url, data, [Function success]) {
     return ajax({
       'type': 'POST',
       'url' : url,
@@ -140,7 +140,7 @@ class QuartDom {
 
   bool match(sel) => filter((elem) => elem.matchesSelector(sel)).size() > 0;
 
-  QuartDom not(sel) => filter((elem) => elem.matchesSelector(sel) === false);
+  QuartDom not(sel) => filter((elem) => elem.matchesSelector(sel) == false);
 
   bool hasClass(className) => dom[0].classes.contains(className);
 
@@ -155,29 +155,29 @@ class QuartDom {
   QuartDom hide() => each((elem){ elem.hidden = true; });
 
   html([htmlData]) {
-    if (htmlData !== null) {
-      return each((elem){ elem.innerHTML = htmlData; });
+    if (htmlData != null) {
+      return each((elem){ elem.innerHtml = htmlData; });
     }
     return dom[0].innerHTML;
   }
 
   /* Not yet implemented in VM */
   text([textData]) {
-    if (text !== null) {
+    if (text != null) {
       return each((elem){ elem.innerText = textData; });
     }
     return dom[0].innerText;
   }
 
   attr(name, [value]) {
-    if (value !== null) {
+    if (value != null) {
       return each((elem){ elem.attributes[name] = value; });
     }
     return dom[0].attributes[name];
   }
 
   data(name, [value]) {
-    if (value !== null) {
+    if (value != null) {
       return each((elem){ elem.dataAttributes[name] = value; });
     }
     return dom[0].dataAttributes[name];
@@ -224,15 +224,15 @@ class QuartEvent {
 
   static _find(Element elem, String evt, fn) {
     return handlers.filter((handler){
-      return handler !== null
-        && handler['elem'] === elem
-        && (evt === null || handler['evt'] == evt)
-        && (fn === null || handler['fn'] === fn);
+      return handler != null
+        && handler['elem'] == elem
+        && (evt == null || handler['evt'] == evt)
+        && (fn == null || handler['fn'] == fn);
     });
   }
 
   static void add(Element elem, String evts, fn) {
-    if (handlers === null) {
+    if (handlers == null) {
       handlers = [];
     }
     evts.split(" ").forEach((evt){
@@ -246,7 +246,7 @@ class QuartEvent {
   }
 
   static void remove(Element elem, String evts, fn) {
-    if (handlers === null) {
+    if (handlers == null) {
       handlers = [];
     }
     evts.split(" ").forEach((evt){
@@ -257,4 +257,6 @@ class QuartEvent {
     });
   }
 }
+
+var $ = new Quart();
 
