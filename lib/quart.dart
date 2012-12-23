@@ -138,7 +138,7 @@ class QuartDom {
     return Q(childList);
   }
 
-  bool match(sel) => filter((elem) => elem.matchesSelector(sel)).size() > 0;
+  bool matches(sel) => filter((elem) => elem.matchesSelector(sel)).size() > 0;
 
   QuartDom not(sel) => filter((elem) => elem.matchesSelector(sel) == false);
 

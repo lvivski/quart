@@ -17,7 +17,7 @@ prev()              // previous siblings
 remove()            // remove element
 parent()            // immediate parent node of each element in collection
 children()          // immediate children of each element in collection
-match('selector')   // returns true/false if any element matches the selector
+matches('selector') // it's for jQuery's "is()" method. Returns true/false if any element matches the selector
 not('selector')     // remove elements matching 'selector' from the current collection
 find('selector')    // find all children/grandchildren that match the given selector
 
