@@ -2,6 +2,8 @@
 
 Quart is a minimalist Dart library with a jQuery-compatible API and chaining syntax.
 
+[![](https://drone.io/lvivski/quart/status.png)](https://drone.io/lvivski/quart/latest)
+
 # Element functions:
 
 ``` js
