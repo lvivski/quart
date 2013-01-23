@@ -1,5 +1,7 @@
 name: quart
-version: 0.0.1+hotfix1
+version: 0.0.1+hotfix.m2
 author: Yehor Lvivski <lvivski@gmail.com>
 description: Minimalist Dart library with a jQuery-compatible API
 homepage: http://github.com/lvivski/quart
+dependencies:
+  browser: any

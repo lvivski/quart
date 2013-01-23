@@ -54,7 +54,7 @@ class Quart {
     String url  = options.containsKey('url') ? options['url'] : window.location.toString();
     String data;
     if (options.containsKey('data') && options['data'] is Map) {
-      data = JSON.stringify(data);
+      data = stringify(data);
     }
 
     HttpRequest xhr = new HttpRequest();
@@ -63,7 +63,7 @@ class Quart {
       if (xhr.readyState == 4) {
         if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 0) {
           if (! (new RegExp(r"/^\s*$/")).hasMatch(xhr.responseText)) {
-            callback(JSON.parse(xhr.responseText), 'success', xhr);
+            callback(parse(xhr.responseText), 'success', xhr);
           } else {
             callback(xhr.responseText, 'success', xhr);
           }
@@ -106,9 +106,9 @@ class QuartDom {
     return this;
   }
 
-  List map(callback) => dom.map(callback);
+  List map(callback) => dom.mappedBy(callback).toList();
 
-  QuartDom filter(callback) => Q(dom.filter(callback));
+  QuartDom filter(callback) => Q(dom.where(callback).toList());
 
   int size() => dom.length;
 
@@ -138,9 +138,9 @@ class QuartDom {
     return Q(childList);
   }
 
-  bool matches(sel) => filter((elem) => elem.matchesSelector(sel)).size() > 0;
+  bool matches(sel) => filter((elem) => elem.matches(sel)).size() > 0;
 
-  QuartDom not(sel) => filter((elem) => elem.matchesSelector(sel) == false);
+  QuartDom not(sel) => filter((elem) => elem.matches(sel) == false);
 
   bool hasClass(className) => dom[0].classes.contains(className);
 
@@ -223,12 +223,12 @@ class QuartEvent {
   static List handlers;
 
   static _find(Element elem, String evt, fn) {
-    return handlers.filter((handler){
+    return handlers.where((handler){
       return handler != null
         && handler['elem'] == elem
         && (evt == null || handler['evt'] == evt)
         && (fn == null || handler['fn'] == fn);
-    });
+    }).toList();
   }
 
   static void add(Element elem, String evts, fn) {
