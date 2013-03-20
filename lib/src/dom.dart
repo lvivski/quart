@@ -1,18 +1,20 @@
 part of quart;
 
+typedef void DomIteratorCallback(HtmlElement element);
+
 class QuartDom {
   String selector;
-  List  dom;
+  List<HtmlElement>  dom;
   Quart Q;
 
   QuartDom(this.dom, this.selector): Q = new Quart();
 
-  QuartDom each(callback) {
+  QuartDom each(DomIteratorCallback callback) {
     dom.forEach(callback);
     return this;
   }
 
-  List map(callback) => dom.mappedBy(callback).toList();
+  List map(callback) => dom.map(callback).toList();
 
   QuartDom filter(callback) => Q(dom.where(callback).toList());
 
@@ -34,7 +36,7 @@ class QuartDom {
 
   QuartDom children() {
     List childList = [];
-    each((elem){ childList.addAll(elem.elements); });
+    each((elem){ childList.addAll(elem.children); });
     return Q(childList);
   }
 
@@ -64,15 +66,15 @@ class QuartDom {
     if (htmlData != null) {
       return each((elem){ elem.innerHtml = htmlData; });
     }
-    return dom[0].innerHTML;
+    return dom[0].innerHtml;
   }
 
   /* Not yet implemented in VM */
   text([textData]) {
     if (text != null) {
-      return each((elem){ elem.innerText = textData; });
+      return each((elem){ elem.text = textData; });
     }
-    return dom[0].innerText;
+    return dom[0].text;
   }
 
   attr(name, [value]) {
@@ -84,9 +86,9 @@ class QuartDom {
 
   data(name, [value]) {
     if (value != null) {
-      return each((elem){ elem.dataAttributes[name] = value; });
+      return each((elem){ elem.dataset[name] = value; });
     }
-    return dom[0].dataAttributes[name];
+    return dom[0].dataset[name];
   }
 
   QuartDom _insert(where, htmlData) {
@@ -106,7 +108,7 @@ class QuartDom {
         if(htmlData is Element) {
           elem.insertAdjacentElement(where, htmlData);
         } else {
-          elem.insertAdjacentHTML(where, htmlData);
+          elem.insertAdjacentHtml(where, htmlData);
         }
       }
     });

@@ -1,7 +1,8 @@
 part of quart;
 
 class QuartEvents {
-  static List handlers;
+  static List handlers = [];
+  static List<StreamSubscription> subscriptions = [];
 
   static _find(Element elem, String evt, fn) {
     return handlers.where((handler){
@@ -13,27 +14,21 @@ class QuartEvents {
   }
 
   static void add(Element elem, String evts, fn) {
-    if (handlers == null) {
-      handlers = [];
-    }
     evts.split(" ").forEach((evt){
       handlers.add({
         'evt' : evt.trim(),
         'elem': elem,
         'fn' : fn,
         'idx' : handlers.length });
-      elem.on[evt].add(fn);
+      subscriptions.add(elem.on[evt].listen(fn));
     });
   }
 
   static void remove(Element elem, String evts, fn) {
-    if (handlers == null) {
-      handlers = [];
-    }
     evts.split(" ").forEach((evt){
       _find(elem, evt, fn).forEach((handler){
         handlers[handler['idx']] = null;
-        elem.on[evt].remove(handler['fn']);
+        subscriptions[handler['idx']].cancel();
       });
     });
   }

@@ -1,6 +1,7 @@
 library quart;
 
 import 'dart:html';
+import 'dart:async';
 import 'dart:json';
 
 part 'src/events.dart';
@@ -62,7 +63,7 @@ class Quart {
 
     HttpRequest xhr = new HttpRequest();
 
-    xhr.on.readyStateChange.add((evt){
+    xhr.on['load'].listen((evt){
       if (xhr.readyState == 4) {
         if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 0) {
           if (! (new RegExp(r"/^\s*$/")).hasMatch(xhr.responseText)) {
@@ -76,7 +77,7 @@ class Quart {
       }
     });
 
-    xhr.open(type, url, true);
+    xhr.open(type, url);
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     xhr.send(data);
     return xhr;
