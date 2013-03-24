@@ -1,7 +1,5 @@
 part of quart;
 
-typedef void DomIteratorCallback(HtmlElement element);
-
 class QuartDom {
   String selector;
   List<HtmlElement>  dom;
@@ -9,18 +7,18 @@ class QuartDom {
 
   QuartDom(this.dom, this.selector): Q = new Quart();
 
-  QuartDom each(DomIteratorCallback callback) {
+  QuartDom each(void callback(HtmlElement el)) {
     dom.forEach(callback);
     return this;
   }
 
   List map(callback) => dom.map(callback).toList();
 
-  QuartDom filter(callback) => Q(dom.where(callback).toList());
+  QuartDom filter(bool callback(HtmlElement el)) => Q(dom.where(callback).toList());
 
   int size() => dom.length;
 
-  Element get(idx) => dom[idx];
+  Element get(num idx) => dom[idx];
 
   QuartDom remove() => each((elem){ elem.remove(); });
 
@@ -35,63 +33,63 @@ class QuartDom {
   QuartDom parent() => Q(map((elem) => elem.parent));
 
   QuartDom children() {
-    List childList = [];
+    var childList = [];
     each((elem){ childList.addAll(elem.children); });
     return Q(childList);
   }
 
-  QuartDom find(sel) {
-    List childList = [];
+  QuartDom find(String sel) {
+    var childList = [];
     each((elem){ childList.addAll(elem.queryAll(sel)); });
     return Q(childList);
   }
 
-  bool matches(sel) => filter((elem) => elem.matches(sel)).size() > 0;
+  bool matches(String sel) => filter((elem) => elem.matches(sel)).size() > 0;
 
-  QuartDom not(sel) => filter((elem) => elem.matches(sel) == false);
+  QuartDom not(String sel) => filter((elem) => elem.matches(sel) == false);
 
-  bool hasClass(className) => dom[0].classes.contains(className);
+  bool hasClass(String className) => dom[0].classes.contains(className);
 
-  QuartDom addClass(className) => each((elem){ elem.classes.add(className); });
+  QuartDom addClass(String className) => each((elem){ elem.classes.add(className); });
 
-  QuartDom removeClass(className) => each((elem){ elem.classes.remove(className); });
+  QuartDom removeClass(String className) => each((elem){ elem.classes.remove(className); });
 
-  QuartDom toggleClass(className) => each((elem){ elem.classes.toggle(className); });
+  QuartDom toggleClass(String className) => each((elem){ elem.classes.toggle(className); });
 
   QuartDom show() => each((elem){ elem.hidden = false; });
 
   QuartDom hide() => each((elem){ elem.hidden = true; });
 
-  html([htmlData]) {
-    if (htmlData != null) {
+  html([String htmlData]) {
+    if (?htmlData) {
       return each((elem){ elem.innerHtml = htmlData; });
     }
     return dom[0].innerHtml;
   }
 
   /* Not yet implemented in VM */
-  text([textData]) {
-    if (text != null) {
+  text([String textData]) {
+    if (?textData) {
       return each((elem){ elem.text = textData; });
     }
     return dom[0].text;
   }
 
-  attr(name, [value]) {
-    if (value != null) {
+  attr(String name, [String value]) {
+    if (?value) {
       return each((elem){ elem.attributes[name] = value; });
     }
     return dom[0].attributes[name];
   }
 
-  data(name, [value]) {
-    if (value != null) {
+  data(String name, [String value]) {
+    if (?value) {
       return each((elem){ elem.dataset[name] = value; });
     }
     return dom[0].dataset[name];
   }
 
-  QuartDom _insert(where, htmlData) {
+  QuartDom _insert(String where, htmlData) {
     return each((elem){
       if (htmlData is QuartDom) {
         dom = htmlData.dom;
@@ -122,7 +120,7 @@ class QuartDom {
 
   QuartDom after(htmlData)  => _insert('afterEnd', htmlData);
 
-  QuartDom bind(evt, callback) => each((elem){ QuartEvents.add(elem, evt, callback); });
+  QuartDom bind(String evt, void callback(Event e)) => each((elem){ QuartEvents.add(elem, evt, callback); });
 
-  QuartDom unbind([evt, callback]) => each((elem){ QuartEvents.remove(elem, evt, callback); });
+  QuartDom unbind([String evt, void callback(Event e)]) => each((elem){ QuartEvents.remove(elem, evt, callback); });
 }
