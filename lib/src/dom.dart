@@ -12,7 +12,7 @@ class QuartDom {
     return this;
   }
 
-  List map(callback) => dom.map(callback).toList();
+  List map(callback(HtmlElement el)) => dom.map(callback).toList();
 
   QuartDom filter(bool callback(HtmlElement el)) => Q(dom.where(callback).toList());
 
