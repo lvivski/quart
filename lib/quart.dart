@@ -10,7 +10,7 @@ part 'src/dom.dart';
 class Quart {
   Map extensions;
 
-  noSuchMethod(InvocationMirror mirror) {
+  noSuchMethod(Invocation mirror) {
     if (extensions == null) {
       extensions = {};
     }
